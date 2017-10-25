@@ -30,9 +30,19 @@ def signup():
     #     result = {'status': 0, 'message': 'Error'}
     #     return result
 
-# @app.route('/signin', methods=['POST'])
+@app.route('/signin', methods=['POST'])
+def signin():
+    data = request.form
+    # validate signin here?
+    user = User.query.filter_by(username = data['username']).first()
+    if user is not None and user.check_password(data['password']):
+        result = {'status': 1, 'message': 'Success!'}
+        return jsonify(result)
+    else:
+        result = {'status': 0, 'message': 'Error'}
+        return jsonify(result)
 
-# @app.route('/gallery/<user_id>', methods=['GET', 'PUT', 'DELETE']) ??? where to put the auth?
+# @app.route('/saved/<user_id>', methods=['GET', 'PUT', 'DELETE']) ??? where to put the auth?
 
 # Helper functions
 # def valid_signup(username, email, password):
