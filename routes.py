@@ -42,11 +42,11 @@ def signin():
         result = {'status': 0, 'message': 'Error'}
         return jsonify(result)
 
-@app.route('/images/<user_id>', methods=['GET', 'POST'])
-def images(user_id):
-    if request.method == 'GET':
+# @app.route('/images/<user_id>', methods=['GET', 'POST'])
+# def images(user_id):
+    # if request.method == 'GET':
         # get all songs for the user
-    elif request.method == 'POST':
+    # elif request.method == 'POST':
         # post the song into the db
 
 
