@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from models import db, User
+from models import db, User, Image
 # from cerberus import Validator
 # schema = {
 #     'username': {'type': 'string'},
@@ -42,11 +42,13 @@ def signin():
         result = {'status': 0, 'message': 'Error'}
         return jsonify(result)
 
-# @app.route('/saved/<user_id>', methods=['GET', 'PUT', 'DELETE']) ??? where to put the auth?
+@app.route('/images/<user_id>', methods=['GET', 'POST'])
+def images(user_id):
+    if request.method == 'GET':
+        # get all songs for the user
+    elif request.method == 'POST':
+        # post the song into the db
 
-# Helper functions
-# def valid_signup(username, email, password):
-# how to do this????
 
 if __name__ == '__main__':
     app.run(debug=True)
