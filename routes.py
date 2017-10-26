@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 from models import db, User, Image
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 app.config.from_object(os.environ['APP_SETTINGS'])
 
