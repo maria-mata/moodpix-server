@@ -1,23 +1,12 @@
 from flask import Flask, render_template, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from models import db, User, Image
 import os
-from urllib import parse
-import psycopg2
-
-parse.uses_netloc.append("postgres")
-url = parse.urlparse(os.environ["DATABASE_URL"])
-
-conn = psycopg2.connect(
-    database=url.path[1:],
-    user=url.username,
-    password=url.password,
-    host=url.hostname,
-    port=url.port
-)
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/moodpix'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/moodpix' or os.environ['DATABASE_URL']
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = 'False'
 db.init_app(app)
 
