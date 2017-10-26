@@ -25,7 +25,7 @@ class User(db.Model):
 class Image(db.Model):
     __tablename__ = 'images'
     id = db.Column(db.Integer, primary_key = True)
-    url = db.Column(db.String(200), unique = True, nullable = False)
+    url = db.Column(db.Text(2083), nullable = False)
     name = db.Column(db.String(100), unique = True, nullable = False)
     description = db.Column(db.Text(200), nullable = False)
 
