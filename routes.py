@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from models import db, User, Image
 import os
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/moodpix' or os.environ['DATABASE_URL']
+app.config.from_object(os.environ['APP_SETTINGS'])
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = 'False'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/moodpix'
+
 db.init_app(app)
 
 @app.route('/')
