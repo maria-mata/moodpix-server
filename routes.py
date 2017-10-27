@@ -4,7 +4,6 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from models import db, User, Image
 from api import tone_analyzer
-from s3 import *
 
 app = Flask(__name__)
 CORS(app)
