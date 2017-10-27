@@ -30,7 +30,7 @@ class Image(db.Model):
     description = db.Column(db.Text(200), nullable = False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = False)
-    user = db.relationship('User', backref=db.backref('images', lazy=True))
+    user = db.relationship('User', backref = db.backref('images', lazy = True))
 
     def __init__(self, user_id, url, name, description):
         self.user_id = user_id

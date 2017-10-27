@@ -56,7 +56,7 @@ def images(user_id):
         return jsonify(images)
     elif request.method == 'POST':
         # add to amazon S3
-        file = request.files['user_file']
+        file = request.file
         output = upload_file_to_s3(file, S3_BUCKET])
         image_url = jsonify(output)
         if image_url['Error']:
@@ -69,6 +69,7 @@ def images(user_id):
             db.session.commit()
             response = {'status': 1, 'message': 'Success!'}
         return jsonify(response)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
