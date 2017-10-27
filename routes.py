@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, jsonify
-from models import db, User, Image
 import os
+import json
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
+from models import db, User, Image
+from api import tone_analyzer
 
 app = Flask(__name__)
 CORS(app)
@@ -16,6 +18,12 @@ db.init_app(app)
 def index():
     return render_template('index.html')
 
+@app.route('/mood', methods=['POST'])
+def analyze_tone():
+    data = request.json
+    response = json.dumps(tone_analyzer.tone(text = data['text']), indent = 2)
+    return jsonify(response)
+
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.json
@@ -23,8 +31,8 @@ def signup():
     newuser = User(data['username'], data['email'], data['password'])
     db.session.add(newuser)
     db.session.commit()
-    result = {'status': 1, 'message': 'Success!'}
-    return jsonify(result)
+    response = {'status': 1, 'message': 'Success!'}
+    return jsonify(response)
     # else:
     #     result = {'status': 0, 'message': 'Error'}
     #     return result
@@ -35,11 +43,11 @@ def signin():
     # validate signin here?
     user = User.query.filter_by(username = data['username']).first()
     if user is not None and user.check_password(data['password']):
-        result = {'status': 1, 'message': 'Success!'}
-        return jsonify(result)
+        response = {'status': 1, 'message': 'Success!'}
+        return jsonify(response)
     else:
-        result = {'status': 0, 'message': 'Error'}
-        return jsonify(result)
+        response = {'status': 0, 'message': 'Error'}
+        return jsonify(response)
 
 # @app.route('/images/<user_id>', methods=['GET', 'POST'])
 # def images(user_id):
