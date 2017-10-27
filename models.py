@@ -28,7 +28,6 @@ class Image(db.Model):
     url = db.Column(db.Text(2083), nullable = False)
     name = db.Column(db.String(100), unique = True, nullable = False)
     description = db.Column(db.Text(200), nullable = False)
-
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = False)
     user = db.relationship('User', backref = db.backref('images', lazy = True))
 
@@ -37,3 +36,12 @@ class Image(db.Model):
         self.url = url
         self.name = name
         self.description = description
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'url': self.url,
+            'name': self.name,
+            'description': self.description
+        }
