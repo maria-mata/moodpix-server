@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from models import db, User, Image
 from api import tone_analyzer
+from s3 import *
 
 app = Flask(__name__)
 CORS(app)
@@ -53,10 +54,21 @@ def images(user_id):
     if request.method == 'GET':
         images = Image.query.filter_by(user_id = user_id)
         return jsonify(images)
-    # elif request.method == 'POST':
+    elif request.method == 'POST':
         # add to amazon S3
+        file = request.files['user_file']
+        output = upload_file_to_s3(file, S3_BUCKET])
+        image_url = jsonify(output)
+        if image_url['Error']:
+            response = {'Error': 'Image upload failed.'}
         # post with link to the DB
-
+        else:
+            data = request.json
+            newimage = Image(image_url, data['name'], data['description'], user_id)
+            db.session.add(newimage)
+            db.session.commit()
+            response = {'status': 1, 'message': 'Success!'}
+        return jsonify(response)
 
 if __name__ == '__main__':
     app.run(debug=True)
