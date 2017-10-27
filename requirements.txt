@@ -10,6 +10,7 @@ cryptography==2.1.2
 docutils==0.14
 Flask==0.12.2
 Flask-Cors==3.0.3
+Flask-JWT==0.3.2
 Flask-SQLAlchemy==2.3.2
 gunicorn==19.7.1
 idna==2.6
@@ -19,6 +20,7 @@ jmespath==0.9.3
 MarkupSafe==1.0
 psycopg2==2.7.3.2
 pycparser==2.18
+PyJWT==1.4.2
 pyOpenSSL==17.3.0
 pysolr==3.6.0
 python-dateutil==2.6.1
