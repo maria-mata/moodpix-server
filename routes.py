@@ -40,7 +40,6 @@ def signup():
 @app.route('/signin', methods=['POST'])
 def signin():
     data = request.json
-    # validate signin here?
     user = User.query.filter_by(username = data['username']).first()
     if user is not None and user.check_password(data['password']):
         response = {'status': 1, 'message': 'Success!'}
@@ -49,12 +48,14 @@ def signin():
         response = {'status': 0, 'message': 'Error'}
         return jsonify(response)
 
-# @app.route('/images/<user_id>', methods=['GET', 'POST'])
-# def images(user_id):
-    # if request.method == 'GET':
-        # get all songs for the user
+@app.route('/images/<user_id>', methods=['GET', 'POST'])
+def images(user_id):
+    if request.method == 'GET':
+        images = Image.query.filter_by(user_id = user_id)
+        return jsonify(images)
     # elif request.method == 'POST':
-        # post the song into the db
+        # add to amazon S3
+        # post with link to the DB
 
 
 if __name__ == '__main__':
