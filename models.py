@@ -27,19 +27,19 @@ class User(db.Model):
     def generate_auth_token(self, secret):
         s = Serializer(secret, expires_in = 600)
         response = s.dumps({ 'id': self.id })
-        return json.dumps(response.decode("utf-8"))
+        return json.dumps(response.decode('utf-8'))
 
     @staticmethod
     def verify_auth_token(token, secret):
         s = Serializer(secret)
         try:
-            data = s.loads(token)
+            decoded = json.loads(token).encode('utf8')
+            user = s.loads(decoded)
         except SignatureExpired:
-            return None # valid token, but expired
+            return None
         except BadSignature:
-            return None # invalid token
-        user = User.query.get(data['id'])
-        return user # returns the ID of the user
+            return None
+        return user['id']
 
 
 class Image(db.Model):

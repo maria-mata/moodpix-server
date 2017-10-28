@@ -12,7 +12,6 @@ CORS(app)
 secret = os.environ['SECRET_KEY']
 app.config.from_object(os.environ['APP_SETTINGS'])
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/moodpix'
-# app.config['SECRET_KEY']
 
 db.init_app(app)
 
