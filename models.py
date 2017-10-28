@@ -1,5 +1,8 @@
+import json
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
+from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
+    BadSignature, SignatureExpired)
 
 db = SQLAlchemy()
 
@@ -20,6 +23,23 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.pwdhash, password)
+
+    def generate_auth_token(self, secret):
+        s = Serializer(secret, expires_in = 600)
+        response = s.dumps({ 'id': self.id })
+        return json.dumps(response.decode("utf-8"))
+
+    @staticmethod
+    def verify_auth_token(token, secret):
+        s = Serializer(secret)
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None # valid token, but expired
+        except BadSignature:
+            return None # invalid token
+        user = User.query.get(data['id'])
+        return user # returns the ID of the user
 
 
 class Image(db.Model):
