@@ -30,8 +30,8 @@ class User(db.Model):
         return json.dumps(response.decode("utf-8"))
 
     @staticmethod
-    def verify_auth_token(token, s):
-        # s = Serializer(app.config['SECRET_KEY'])
+    def verify_auth_token(token, secret):
+        s = Serializer(secret)
         try:
             data = s.loads(token)
         except SignatureExpired:
@@ -39,7 +39,7 @@ class User(db.Model):
         except BadSignature:
             return None # invalid token
         user = User.query.get(data['id'])
-        return user
+        return user # returns the ID of the user
 
 
 class Image(db.Model):
