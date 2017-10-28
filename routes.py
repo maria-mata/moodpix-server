@@ -57,7 +57,7 @@ def signin():
         return jsonify(response)
 
 @app.route('/images/<token>', methods=['GET', 'POST'])
-def images():
+def images(token):
     # need to add validation
     user_id = User.verify_auth_token(token, secret)
     if user_id is not None:
