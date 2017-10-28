@@ -50,7 +50,7 @@ def signin():
     data = request.json
     user = User.query.filter_by(username = data['username']).first()
     if user is not None and user.check_password(data['password']):
-        secret = SECRET_KEY
+        secret = os.environ['SECRET_KEY']
         # secret = app.config['SECRET_KEY']
         token = user.generate_auth_token(secret)
         response = {'message': 'Success!', 'token': token}
