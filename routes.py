@@ -2,16 +2,16 @@ import os, json
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from models import db, User, Image
-from api import tone_analyzer
+# from api import tone_analyzer
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
     BadSignature, SignatureExpired)
 
 app = Flask(__name__)
 CORS(app)
 
-app.config.from_object(os.environ['APP_SETTINGS'])
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/moodpix'
-# app.config['SECRET_KEY'] = 'potato'
+# app.config.from_object(os.environ['APP_SETTINGS'])
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/moodpix'
+app.config['SECRET_KEY'] = 'potato'
 
 db.init_app(app)
 
@@ -19,11 +19,11 @@ db.init_app(app)
 def index():
     return render_template('index.html')
 
-@app.route('/mood', methods=['POST'])
-def analyze_tone():
-    data = request.json
-    response = json.dumps(tone_analyzer.tone(text = data['text']), indent = 2)
-    return jsonify(response)
+# @app.route('/mood', methods=['POST'])
+# def analyze_tone():
+#     data = request.json
+#     response = json.dumps(tone_analyzer.tone(text = data['text']), indent = 2)
+#     return jsonify(response)
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -38,7 +38,10 @@ def signup():
         newuser = User(data['username'], data['email'], data['password'])
         db.session.add(newuser)
         db.session.commit()
-        response = {'message': 'Success!'}
+        # secret = app.config.from_object(os.environ['SECRET_KEY'])
+        secret = app.config['SECRET_KEY']
+        token = newuser.generate_auth_token(secret)
+        response = {'message': 'Success!', 'token': token}
         return jsonify(response)
 
 @app.route('/signin', methods=['POST'])
@@ -47,6 +50,7 @@ def signin():
     data = request.json
     user = User.query.filter_by(username = data['username']).first()
     if user is not None and user.check_password(data['password']):
+        # secret = app.config.from_object(os.environ['SECRET_KEY'])
         secret = app.config['SECRET_KEY']
         token = user.generate_auth_token(secret)
         response = {'message': 'Success!', 'token': token}
