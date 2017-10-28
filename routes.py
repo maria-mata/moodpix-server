@@ -9,6 +9,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
 app = Flask(__name__)
 CORS(app)
 
+secret = os.environ['SECRET_KEY']
 app.config.from_object(os.environ['APP_SETTINGS'])
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/moodpix'
 # app.config['SECRET_KEY']
@@ -38,8 +39,6 @@ def signup():
         newuser = User(data['username'], data['email'], data['password'])
         db.session.add(newuser)
         db.session.commit()
-        secret = app.config.from_object(os.environ['SECRET_KEY'])
-        # secret = app.config['SECRET_KEY']
         token = newuser.generate_auth_token(secret)
         response = {'message': 'Success!', 'token': token}
         return jsonify(response)
@@ -50,8 +49,6 @@ def signin():
     data = request.json
     user = User.query.filter_by(username = data['username']).first()
     if user is not None and user.check_password(data['password']):
-        secret = os.environ['SECRET_KEY']
-        # secret = app.config['SECRET_KEY']
         token = user.generate_auth_token(secret)
         response = {'message': 'Success!', 'token': token}
         return jsonify(response)
@@ -62,8 +59,6 @@ def signin():
 @app.route('/images', methods=['GET', 'POST'])
 def images():
     # need to add validation
-    secret = app.config.from_object(os.environ['SECRET_KEY'])
-    # secret = app.config['SECRET_KEY']
     token = request.json['token']
     user_id = User.verify_auth_token(token, secret)
     if user_id is not None:
