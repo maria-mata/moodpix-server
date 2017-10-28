@@ -56,10 +56,9 @@ def signin():
         response = {'error': 'Incorrect username or password.'}
         return jsonify(response)
 
-@app.route('/images', methods=['GET', 'POST'])
+@app.route('/images/<token>', methods=['GET', 'POST'])
 def images():
     # need to add validation
-    token = request.json['token']
     user_id = User.verify_auth_token(token, secret)
     if user_id is not None:
         if request.method == 'GET':
