@@ -38,7 +38,7 @@ class User(db.Model):
             return None # valid token, but expired
         except BadSignature:
             return None # invalid token
-        user = User.query.get(data['id'])
+        user = User.query.filter_by(id = data['id'])
         return user # returns the ID of the user
 
 
