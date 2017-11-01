@@ -80,7 +80,7 @@ def delete_image(token, image_id):
     # need to add validation
     user_id = User.verify_auth_token(token, secret)
     if user_id is not None:
-        image = Image.query.filter_by(id = image_id)
+        image = Image.query.filter_by(id = image_id).first()
         db.session.delete(image)
         db.session.commit()
         response = {'message': 'Success!'}
