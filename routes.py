@@ -55,7 +55,7 @@ def signin():
         response = {'error': 'Incorrect username or password.'}
         return jsonify(response)
 
-@app.route('/images/<token>', methods=['GET', 'POST', 'DELETE'])
+@app.route('/images/<token>', methods=['GET', 'POST'])
 def images(token):
     # need to add validation
     user_id = User.verify_auth_token(token, secret)
@@ -71,13 +71,21 @@ def images(token):
             db.session.commit()
             response = {'message': 'Success!'}
             return jsonify(response)
-        elif request.method == 'DELETE':
-            data = request.json
-            image = Image.query.filter_by(id = data['id'])
-            db.session.delete(image)
-            db.session.commit()
-            response = {'message': 'Success!'}
-            return jsonify(response)
+    else:
+        response = {'error': 'Cannot verify token.'}
+        return jsonify(response)
+
+@app.route('/images/<token>/<id>', methods=['DELETE'])
+def delete_image(token, id):
+    # need to add validation
+    user_id = User.verify_auth_token(token, secret)
+    if user_id is not None:
+        data = request.json
+        image = Image.query.filter_by(id = data['id'])
+        db.session.delete(image)
+        db.session.commit()
+        response = {'message': 'Success!'}
+        return jsonify(response)
     else:
         response = {'error': 'Cannot verify token.'}
         return jsonify(response)
