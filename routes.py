@@ -76,7 +76,7 @@ def images(token):
         return jsonify(response)
 
 @app.route('/images/<token>/<image_id>', methods=['DELETE'])
-def delete_image(token, id):
+def delete_image(token, image_id):
     # need to add validation
     user_id = User.verify_auth_token(token, secret)
     if user_id is not None:
