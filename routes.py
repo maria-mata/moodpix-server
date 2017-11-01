@@ -55,7 +55,7 @@ def signin():
         response = {'error': 'Incorrect username or password.'}
         return jsonify(response)
 
-@app.route('/images/<token>', methods=['GET', 'POST'])
+@app.route('/images/<token>', methods=['GET', 'POST', 'DELETE'])
 def images(token):
     # need to add validation
     user_id = User.verify_auth_token(token, secret)
@@ -68,6 +68,13 @@ def images(token):
             data = request.json
             newimage = Image(user_id, data['url'], data['name'], data['description'])
             db.session.add(newimage)
+            db.session.commit()
+            response = {'message': 'Success!'}
+            return jsonify(response)
+        elif request.method == 'DELETE':
+            data = request.json
+            image = Image.query.filter_by(id = data['id'])
+            db.session.delete(image)
             db.session.commit()
             response = {'message': 'Success!'}
             return jsonify(response)
