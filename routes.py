@@ -75,13 +75,12 @@ def images(token):
         response = {'error': 'Cannot verify token.'}
         return jsonify(response)
 
-@app.route('/images/<token>/<id>', methods=['DELETE'])
+@app.route('/images/<token>/<image_id>', methods=['DELETE'])
 def delete_image(token, id):
     # need to add validation
     user_id = User.verify_auth_token(token, secret)
     if user_id is not None:
-        data = request.form
-        image = Image.query.filter_by(id = data['id'])
+        image = Image.query.filter_by(id = image_id)
         db.session.delete(image)
         db.session.commit()
         response = {'message': 'Success!'}
